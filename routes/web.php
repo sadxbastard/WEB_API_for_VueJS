@@ -34,7 +34,7 @@ Route::post('/type_of_activity/update/{id}', [Type_of_activityController::class,
 
 Route::get("/type_of_activity/destroy/{id}", [Type_of_activityController::class, 'destroy'])->middleware('auth');
 
-// Route::get('/login', [LoginController::class, 'login']);
+ Route::get('/login', [LoginController::class, 'login']);
 
 Route::get('/logout', [LoginController::class, 'logout']);
 

@@ -10,6 +10,7 @@ class Activity extends Model
 {
     use HasFactory;
     protected $table = 'activities';
+    protected $fillable = ['user_id', 'types_of_activity_id', 'activity_name', 'date_of_completion', 'actual_score'];
     public function type_of_activity(): BelongsTo
     {
         return $this->belongsTo(Type_of_activity::class);

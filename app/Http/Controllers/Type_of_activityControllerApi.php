@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\validation;
+use Illuminate\Support\Facades\Auth;
 
 class Type_of_activityControllerApi extends Controller
 {
@@ -16,7 +17,9 @@ class Type_of_activityControllerApi extends Controller
      */
     public function index()
     {
-        return response(Type_of_activity::all());
+        $user_id = Auth::id();
+        $typesOfActivity = Type_of_activity::where('user_id', $user_id)->get();
+        return response($typesOfActivity);
     }
 
     /**
@@ -32,7 +35,14 @@ class Type_of_activityControllerApi extends Controller
      */
     public function show(string $id)
     {
-        return response(Type_of_activity::find($id));
+        $userId = Auth::id();
+        $typeOfActivity = Type_of_activity::where('id', $id)->where('user_id', $userId)->first();
+
+        if ($typeOfActivity) {
+            return response($typeOfActivity);
+        }
+
+        return response(['message' => 'Not found'], 404);
     }
 
     /**

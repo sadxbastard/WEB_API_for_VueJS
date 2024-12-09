@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Type_of_activity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityControllerApi extends Controller
 {
@@ -13,7 +14,9 @@ class ActivityControllerApi extends Controller
      */
     public function index()
     {
-        return response(Activity::all());
+        $userId = Auth::id();
+        $activities = Activity::where('user_id', $userId)->get();
+        return response($activities);
     }
 
     /**
@@ -29,7 +32,14 @@ class ActivityControllerApi extends Controller
      */
     public function show(string $id)
     {
-        return response(Activity::find($id));
+        $userId = Auth::id();
+        $activity = Activity::where('id', $id)->where('user_id', $userId)->first();
+
+        if ($activity) {
+            return response($activity);
+        }
+
+        return response(['message' => 'Not found'], 404);
     }
 
     /**
