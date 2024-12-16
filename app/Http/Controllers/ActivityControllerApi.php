@@ -15,8 +15,20 @@ class ActivityControllerApi extends Controller
     public function index()
     {
         $userId = Auth::id();
-        $activities = Activity::where('user_id', $userId)->get();
+        $activities = Activity::where('user_id', $userId)
+                                ->limit($request->perpage ?? 5)
+                                ->offset(($request->perpage ?? 5) * ($request->page ?? 0))
+                                ->get();
         return response($activities);
+    }
+
+    public function total()
+    {
+        $user_id = Auth::id();
+        $countActivities = Activity::where('user_id', $user_id)
+                                    ->get()->count();
+
+        return response($countActivities);
     }
 
     /**
