@@ -11,7 +11,7 @@ class Type_of_activity extends Model
 {
     use HasFactory;
     protected $table = 'types_of_activity';
-    protected $fillable = ['type_of_activity_name', 'maximum_score', 'user_id'];
+    protected $fillable = ['type_of_activity_name', 'maximum_score', 'user_id', 'pucture_url'];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

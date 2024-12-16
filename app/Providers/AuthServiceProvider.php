@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Type_of_activity;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Pagination\Paginator;
+use App\Models\User;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +24,15 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+        Paginator::defaultView('pagination::bootstrap-4');
+
+        Gate::define('destroy-type_of_activity', function (User $user, Type_of_activity $type_of_activity) {
+            return $user->is_admin == 1;
+        });
+
+        Gate::define('create-type_of_activity', function (User $user) {
+            return true; // true;
+        });
     }
 }

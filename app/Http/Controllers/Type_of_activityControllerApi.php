@@ -41,7 +41,44 @@ class Type_of_activityControllerApi extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (! Gate::allows('create-type_of_activity')){
+            return response()->json([
+                'code' => 1,
+                'message' => 'У вас нет прав на добавление категории'
+            ]);
+        }
+        $validated = $request->validate([
+            'type_of_activity_name' => 'required|unique:types_of_activity|max:255',
+            'user_id' => 'integer',
+            'maximum_score' => 'required|integer',
+            'image' => 'required|file'
+        ]);
+        $file = $request->file('image');
+        // Генерация уникального имени файла
+        $fileName = rand(1, 100000). '_' . $file->getClientOriginalName();
+        try{
+            $path = Storage::disk('s3')->putFileAs('types_of_activity_pictures', $file, $fileName);
+            if (empty($path)) {
+                return response()->json([
+                    'code' => 3,
+                    'message' => 'Ошибка: файл не был загружен в хранилище.',
+                ]);
+            }
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $fileUrl = Storage::disk('s3')->url($path);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 2,
+                'message' => 'Ошибка загрузки файла в хранилище: ' . $e->getMessage(),
+            ]);
+        }
+        $type_of_activity = new Type_of_activity($validated);
+        $type_of_activity->picture_url = $fileUrl;
+        $type_of_activity->save();
+        return response()->json([
+            'code' => 0,
+            'message' => 'Вид активности успешно добавлен'
+        ]);
     }
 
     /**
