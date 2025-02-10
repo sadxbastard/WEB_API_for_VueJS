@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('types_of_activity_id')->references('id')->on('types_of_activity');
             $table->date('date_of_completion');
             $table->unsignedInteger('actual_score');
+            $table->string('activity_name');
             $table->timestamps();
         });
     }

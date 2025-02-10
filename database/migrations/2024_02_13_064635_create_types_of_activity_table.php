@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('type_of_activity_name');
             $table->unsignedInteger('maximum_score');
             $table->timestamps();
+            $table->unsignedBigInteger('picture_url');
         });
     }
 
